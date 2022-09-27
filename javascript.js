@@ -2,39 +2,25 @@ const img = document.querySelector("img");
 const button = document.querySelector("button");
 const search = document.querySelector("#search");
 let searchStr = "";
+async function getGif(term) {
+  const response = await fetch(
+    "https://api.giphy.com/v1/gifs/translate?api_key=9ynI9lp8uvWCD3vG0c0BjLQlqBu0MVon&s=" +
+      term,
+    {
+      mode: "cors",
+    }
+  );
+  const responseData = await response.json();
+  img.src = responseData.data.images.original.url;
+}
+
 button.addEventListener("click", () => {
   if (searchStr == "") {
-    fetch(
-      "https://api.giphy.com/v1/gifs/translate?api_key=9ynI9lp8uvWCD3vG0c0BjLQlqBu0MVon&s=random",
-      {
-        mode: "cors",
-      }
-    )
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (response) {
-        console.log("random");
-        img.src = response.data.images.original.url;
-      });
+    getGif("random");
   } else {
-    fetch(
-      "https://api.giphy.com/v1/gifs/translate?api_key=9ynI9lp8uvWCD3vG0c0BjLQlqBu0MVon&s=" +
-        searchStr,
-      {
-        mode: "cors",
-      }
-    )
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (response) {
-        console.log("searched");
-        img.src = response.data.images.original.url;
-      })
-      .catch(function (error) {
-        alert("no gif found");
-      });
+    getGif(searchStr).catch(function (error) {
+      alert("no gif found");
+    });
   }
 });
 search.addEventListener("input", () => {
@@ -44,18 +30,4 @@ search.addEventListener("input", () => {
     searchStr = search.value;
   }
 });
-Window.onload(
-  fetch(
-    "https://api.giphy.com/v1/gifs/translate?api_key=9ynI9lp8uvWCD3vG0c0BjLQlqBu0MVon&s=welcome",
-    {
-      mode: "cors",
-    }
-  )
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (response) {
-      console.log("initial random");
-      img.src = response.data.images.original.url;
-    })
-);
+Window.onload(getGif("welcome"));
