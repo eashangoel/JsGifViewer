@@ -31,6 +31,9 @@ button.addEventListener("click", () => {
       .then(function (response) {
         console.log("searched");
         img.src = response.data.images.original.url;
+      })
+      .catch(function (error) {
+        alert("no gif found");
       });
   }
 });
